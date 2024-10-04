@@ -1,3 +1,4 @@
+OBS (os exercícios foram feitos utilizando uma lista encadeada com array por preferência do autor (no caso eu))
 Algumas das perguntas dos exercícios feitos->
 
   4.7.1 Vetor para lista. Escreva uma função que copie um vetor para uma lista
