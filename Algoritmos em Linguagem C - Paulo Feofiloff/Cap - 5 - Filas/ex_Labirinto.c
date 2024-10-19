@@ -5,7 +5,7 @@ int **Matriz(int n);
 
 void Imprime_Matriz(int **matriz, int n);
 
-void Labirinto(int **matriz, int n);
+int Labirinto(int **matriz, int n);
 
 void Liberar(int **matriz, int n);
 
@@ -16,8 +16,8 @@ int main()
     int **matriz = Matriz(n);
 
     Imprime_Matriz(matriz, n); 
-
-    Labirinto(matriz, n);
+    
+    printf("A distancia encontrada para a formiga chegar ate o destino foi de %d passos", Labirinto(matriz, n));
 
     Liberar(matriz, n);
 }
@@ -30,8 +30,8 @@ int **Matriz(int n)
     { 0,-1, 0, 0, 0},
     { 0,-1, 0,-1, 0},
     { 0, 0, 0,-1, 0},
-    {-1,-1,-1,-1, 0},
-    {-1,-1,-1,-1, 1}
+    { -1,-1,-1,-1, 0},
+    { -1, -1, -1, -1, 1}
     };
 
     int **matriz = malloc(n * sizeof(int*));
@@ -51,67 +51,54 @@ int **Matriz(int n)
 }
 
 
-void Labirinto(int **matriz, int n)
+int Labirinto(int **matriz, int n)
 {
-    int i = 0, j = 0, c, b, d, e, k;
-    int *formiga = &matriz[0][0];
+    int cima, baixo, direita, esquerda, k = 0, i = 0, j = 0;
+    
+    int *fila = malloc(n * n * sizeof(int));
+    int *formiga = fila[0] = &matriz[0][0];
+    
+    while(1)
+    {   
+        formiga = fila[k];
 
-    while (*(formiga + i * n + j) != 1)
-    {
+        if(*formiga == 1) break;
+
+        cima = *(formiga - n);
+        if(cima == 0 && i != 0)
+        {
+            fila[++k] = &*(formiga - n);
             
-        printf("Posicao atual: %d %d\n", i, j);
-        printf("Valor atual: %d\n", *(formiga + i * n + j));
-        
-        k = 0;
-
-        c = i - 1;
-        b = i + 1;
-        d = j + 1;
-        e = j - 1;
- 
-        
-        if(c >= 0 && k == 0)
-        {
-            if(*(formiga + c * n + j) == 0)
-            {
-                *(formiga + i * n + j) = 2; 
-                i = c;
-                k++;
-            }
         }
 
-        if(b < n && k == 0)
+        baixo = *(formiga + n);
+        if(baixo == 0 || baixo == 1 && i != n-1)
         {
-            if(*(formiga + b * n + j) == 0 || *(formiga + b * n + j) == 1)
-            {
-                *(formiga + i * n + j) = 2;
-                i = b;
-                k++;
-            }
+            fila[++k] = &*(formiga + n);
+            
         }
 
-        if(d < n && k == 0) 
+        direita = *(formiga + 1);
+        if(direita == 0 || direita == 1 && j != n-1)
         {
-            if(*(formiga + i * n + d) == 0 || *(formiga + i * n + d) == 1)
-            {
-               *(formiga + i * n + j) = 2;
-                j = d;
-                k++;
-            }  
+            fila[++k] = &*(formiga + 1);
         }
-        if(e >= 0 && k == 0)
+
+        esquerda = *(formiga - 1);
+        if(esquerda == 0 && j != 0)
         {
-            if(*(formiga + i * n + e) == 0)
-            {
-                *(formiga + i * n + j) = 2;
-                j = e;
-                k++;
-            }  
+            fila[++k] = &*(formiga - 1);
         }
-        printf("\n");
+
+        (cima == 0 && i != 0) ? i-- : i;
+        (baixo == 0 && i != n-1) ? i++ : i;
+        (direita == 0 && j != n-1) ? j++ : j;
+        (esquerda == 0 && j != 0) ? j-- : j;
+        *formiga = 2;
+
         Imprime_Matriz(matriz, n);
     }
-    Imprime_Matriz(matriz, n);
+    return k;
 }
 
 
