@@ -53,14 +53,13 @@ int **Matriz(int n)
 
 void Labirinto(int **matriz, int n)
 {
-    int cima, baixo, direita, esquerda, k = 0, i = 0;
+    int cima, baixo, direita, esquerda, k = 0, i = 0, primeiro = 1, distancia = 0;
     
-    int *fila = malloc(2 * n * n * sizeof(int));
+    int *fila = malloc(n * n * sizeof(int));
     int *formiga;
     formiga = fila[0] = &matriz[0][0];
     
-    
-    while(fila[i] != NULL)
+    while(i <= k)
     {   
         cima = *(formiga - n - 1);
         if(cima == 0)
@@ -69,13 +68,23 @@ void Labirinto(int **matriz, int n)
         }
 
         baixo = *(formiga + n + 1);
+        if(baixo == 1 && primeiro == 1)
+        {
+            distancia = i; 
+            primeiro++;
+        } 
         if(baixo == 0 )
         {
             fila[++k] = &*(formiga + n + 1);
         }
 
         direita = *(formiga + 1);
-        if(direita == 0 )
+        if(direita == 1 && primeiro == 1)
+        {
+            distancia = i; 
+            primeiro++;
+        } 
+        if(direita == 0)
         {
             fila[++k] = &*(formiga + 1);
         }
@@ -86,15 +95,17 @@ void Labirinto(int **matriz, int n)
             fila[++k] = &*(formiga - 1);
         }
 
+        
         *formiga = 2;
 
-         formiga = fila[++i];
+        formiga = fila[++i];
 
         Imprime_Matriz(matriz, n);
+        
     }
 
     free(fila);
-    printf("O labirinto foi percorrido!");
+    printf("O labirinto foi percorrido!\nA distancia mais rapida do inicio ate o fim foi de %d passos", i-distancia);
 }
 
 
